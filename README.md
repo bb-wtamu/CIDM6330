@@ -1,2 +1,7 @@
-# CIDM6330
-Space to hold all my work for my CIDM 6330 course on software engineering
+### Spotify Playlist Builder
+
+I will preface this by saying I struggled to come up with a topic. My ideas were either too large (for example a general open-source intelligence scraper that would accept either very broad or very narrow topics as input and scrape the internet for relevent information), too small (for example, the one below), or too close to my profession which I am definitely not encouraged to talk about in open forums. Eventually I decided to go with this problem, which, while narrow, causes me minor frustration essentially every day of my life.
+
+My problem is that [Spotify](https://open.spotify.com), for all the positives it brings to the table as a piece of software, has pretty rudimentary tools for generating unique listening experiences from day to day that you actually have any level of control over. Especially coming from mp3 software of the prior decades like winamp and foobar2000 that were built with user customization as a primary feature, these limitations are grating. And as someone who has music playing almost constantly in their life this is a problem I would love to escape. 
+
+So my system would be a Spotify Playlist Builder - a flexible tool for generating new spotify playlists based on a set of defined inputs and rules from a user. A basic example might be inputs of a series of playlists featuring songs in different genres and the rules would be the percentages the user wanted to hear those genres. The key here is flexibility, so that the tool does not just fit my own personal use case but can be utilized by as many as possible with simlar frustrations.
