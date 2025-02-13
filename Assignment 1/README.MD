@@ -149,4 +149,4 @@ Data storage for songs will be based on the unique spotify URI assigned to each 
 * Depending on how the song database is managed this could also be an external interface of sorts, but at least at first this will probably just utilize internal python data structures.
 
 ## Behaviors
-![Activity Diagram for Logging in to Spotify.](/activity_diagram_login_spotify.png "Login to Spotify Activity Diagram")
+![Activity Diagram for Logging in to Spotify.](/Assignment%201/activity_diagram_login_spotify.png "Login to Spotify Activity Diagram")
