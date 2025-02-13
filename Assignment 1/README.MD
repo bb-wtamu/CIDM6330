@@ -152,3 +152,7 @@ Data storage for songs will be based on the unique spotify URI assigned to each 
 Activity Diagram: Logging in to Spotify  
 
 ![Activity Diagram for Logging in to Spotify.](/Assignment%201/activity_diagram_login_spotify.png "Login to Spotify Activity Diagram")
+
+Activity Diagram: Generating a New Playlist  
+
+![Activity Diagram for Generating a New Playlist.](/Assignment%201/activity_diagram_new_playlist.png "Generating a New Playlist")
