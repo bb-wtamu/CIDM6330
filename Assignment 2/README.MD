@@ -9,7 +9,7 @@ CIDM 6330
 ![ERD for the Spotify Playlist Generator](/Assignment%202/ERD-light.png "ERD for the Spotify Playlist Generator")
 
 ## The Code: Pydantic Models, FastAPI, and CRUD operators
-```
+```python
 # Brandon Baither
 # CIDM 6330
 # Assignment 2
