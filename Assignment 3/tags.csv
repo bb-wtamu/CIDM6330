@@ -1,0 +1,4 @@
+tagID,name,isNumeric
+1,Genre,False
+2,Rating,True
+3,Mood,False

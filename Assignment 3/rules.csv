@@ -1,0 +1,4 @@
+ruleID,tag,requirement,sort,value,count,percent
+1,2,RequirementEnum.GREATER,SortStrategyEnum.SHUFFLE,3,0,0.75
+2,1,RequirementEnum.CONTAINS,SortStrategyEnum.ARTIST,Awesome,0,0.25
+3,3,RequirementEnum.NOT_CONTAINS,SortStrategyEnum.SHUFFLE,Party,200,0.0
