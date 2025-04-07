@@ -78,7 +78,9 @@ def delete_song(request, song_id: int):
 
 @api.post("/playlist")
 def create_playlist(request, playlist: PlaylistIn):
-    Playlist.objects.create(**playlist.dict())
+    worker_info = playlist.dict()
+    worker = Playlist(**worker_info)
+    playlist = Playlist.objects.create(worker)
     return playlist
 
 @api.get("/playlist/{playlist_id}", response=PlaylistOut)
