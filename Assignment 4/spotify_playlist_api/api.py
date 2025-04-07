@@ -44,10 +44,10 @@ api = NinjaAPI()
 
 @api.post("/song")
 def create_song(request, song: SongIn):
-    worker_info = song.dict()
-    worker = Song(**worker_info)
-    song = Song.objects.create(worker)
-    # newSong = Song.objects.create(**song.dict())
+    # worker_info = song.dict()
+    # worker = Song(**worker_info)
+    # song = Song.objects.create(worker)
+    Song.objects.create(**song.dict())
     return song
 
 @api.get("/song/{song_id}", response=SongOut)
@@ -78,9 +78,7 @@ def delete_song(request, song_id: int):
 
 @api.post("/playlist")
 def create_playlist(request, playlist: PlaylistIn):
-    worker_info = playlist.dict()
-    worker = Playlist(**worker_info)
-    playlist = Playlist.objects.create(worker)
+    Playlist.objects.create(**playlist.dict())
     return playlist
 
 @api.get("/playlist/{playlist_id}", response=PlaylistOut)
