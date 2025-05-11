@@ -333,7 +333,8 @@ def associate_rulesets_to_user(request, user_id: int, rulesets: List[int]):
         user.rulesetLibrary.add(get_object_or_404(Ruleset, rulesetID=ruleset))
     return user
 ```
-## Event-Driven Architecture
+
+### Event-Driven Architecture
 The system includes an event-driven system utilizing celery with the django_celery_beat scheduler. A test task was created which would be used to verify the user's spotify API access is still valid. This would be scheduled from the django admin interface as desired, likely periodically - say every 15 minutes. This is defined in full in the job/tasks.py and spotify_playlist_api/settings.py files.
 
 ```python
@@ -352,4 +353,22 @@ def test_account_still_active()
         if response.status_code == 401:
             print("Spotify access expired")
         return response.json()
+```
+
+### Unit Tests
+Several unit tests were developed using Django's unit testing utilities. These can be viewed in full in the job/tests.py file.
+
+```python
+class TestSongGet(TestCase)
+    def setUp(self):
+        self.client = TestClient(api)
+        
+        self.testSong = Song.objects.create(artist = "TestArtist", fitle = "TestTitle", album = "TestAlbum", spotifyURI = "TestURI")
+        
+    def test_get_song(self):
+        response = self.client.get(f"/song/{self.testSong.songID}")
+        expected = { "songID": self.testSong.songID, "artist": "TestArtist", "title": "TestTitle", "album": "TestAlbum", "spotifyURI": "TestURI" }
+                
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), expected)
 ```
