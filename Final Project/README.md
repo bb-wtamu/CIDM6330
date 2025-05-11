@@ -236,7 +236,7 @@ class User(models.Model):
     rulesetLibrary = models.ManyToManyField(Ruleset)
 ```
 
-## CRUD Operations
+### CRUD Operations
 Basic CRUD operators were created for every model used by the system. These can be found in full in the /spotify_playlist_api/api.py file. Presented here is a single example.
 
 ```python
@@ -285,7 +285,7 @@ def delete_song(request, song_id: int):
     return {"success": True, "song": song}
 ```
 
-## Beyond CRUD
+### Beyond CRUD
 Some more complicated functions were added to the API, to enable functionality that will be necessary in the completed tool. These can also be found in the /spotify_playlist_api/api.py file.
 
 ```python
