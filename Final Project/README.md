@@ -322,3 +322,23 @@ def associate_rulesets_to_user(request, user_id: int, rulesets: List[int]):
         user.rulesetLibrary.add(get_object_or_404(Ruleset, rulesetID=ruleset))
     return user
 ```
+## Event-Driven Architecture
+The system includes an event-driven system utilizing celery with the django_celery_beat scheduler. A test task was created which would be used to verify the user's spotify API access is still valid. This would be scheduled from the django admin interface as desired, likely periodically - say every 15 minutes. This is defined in full in the job/tasks.py and spotify_playlist_api/settings.py files.
+
+```python
+@shared_task
+def test_account_still_active()
+    spotify_token = None # code doesn't exist to capture this yet
+    spotify_test_url = "https://api.spotify.com/v1/me"
+    
+    try:
+        response = requests.get(url, headers={"Authorization": f"Bearer {spotify_token}"})
+        response.raise_for_status()
+        
+        return response.json()
+    
+    except: requests.exceptions.RequestException as exception:
+        if response.status_code == 401:
+            print("Spotify access expired")
+        return response.json()
+```
