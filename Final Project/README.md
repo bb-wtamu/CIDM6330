@@ -149,6 +149,14 @@ Activity Diagram: Generating a New Playlist
 
 ![ERD for the Spotify Playlist Generator](/Final%20Project/ERD-light.png "ERD for the Spotify Playlist Generator")
 
+### Sequence Diagrams
+
+![Sequence Diagram for the Spotify Playlist Generator](/Final%20Project/sequence1.png "Sequence Diagram for the Spotify Playlist Generator")
+
+![Sequence Diagram for the Spotify Playlist Generator](/Final%20Project/sequence2.png "Sequence Diagram for the Spotify Playlist Generator")
+
+![Sequence Diagram for the Spotify Playlist Generator](/Final%20Project/sequence3.png "Sequence Diagram for the Spotify Playlist Generator")
+
 ## The API
 The API created for this project is written using Django Ninja.
 
