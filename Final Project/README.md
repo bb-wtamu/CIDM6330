@@ -153,7 +153,7 @@ Activity Diagram: Generating a New Playlist
 The API created for this project is written using Django Ninja.
 
 ### The Models
-Models were created for all of the tables needed in my data schema, with the exception of the association tables between the User class and its libraries - these are generated automatically using Django's ManyToManyFields. The full code for this can be found within the /job/models.py file.
+Models were created for all of the tables needed in my data schema, with the exception of the association tables between the User class and its libraries - these are generated automatically using Django's ManyToManyFields. The full code for this can be found within the [/job/models.py](/Final%20Project/Code/job/models.py) file.
 
 ```python
 class Song(models.Model):
@@ -237,7 +237,7 @@ class User(models.Model):
 ```
 
 ### CRUD Operations
-Basic CRUD operators were created for every model used by the system. These can be found in full in the /spotify_playlist_api/api.py file. Presented here is a single example.
+Basic CRUD operators were created for every model used by the system. These can be found in full in the [/spotify_playlist_api/api.py](/Final%20Project/Code/spotify_playlist_api/api.py) file. Presented here is a single example.
 
 ```python
 class SongIn(Schema):
@@ -286,7 +286,7 @@ def delete_song(request, song_id: int):
 ```
 
 ### Beyond CRUD
-Some more complicated functions were added to the API, to enable functionality that will be necessary in the completed tool. These can also be found in the /spotify_playlist_api/api.py file.
+Some more complicated functions were added to the API, to enable functionality that will be necessary in the completed tool. These can also be found in the [/spotify_playlist_api/api.py](/Final%20Project/Code/spotify_playlist_api/api.py) file.
 
 ```python
 @api.post("/addToPlaylist")
@@ -335,7 +335,7 @@ def associate_rulesets_to_user(request, user_id: int, rulesets: List[int]):
 ```
 
 ### Event-Driven Architecture
-The system includes an event-driven system utilizing celery with the django_celery_beat scheduler. A test task was created which would be used to verify the user's spotify API access is still valid. This would be scheduled from the django admin interface as desired, likely periodically - say every 15 minutes. This is defined in full in the job/tasks.py and spotify_playlist_api/settings.py files.
+The system includes an event-driven system utilizing celery with the django_celery_beat scheduler. A test task was created which would be used to verify the user's spotify API access is still valid. This would be scheduled from the django admin interface as desired, likely periodically - say every 15 minutes. This is defined in full in the [job/tasks.py](/Final%20Project/Code/job/tasks.py) and [spotify_playlist_api/settings.py](/Final%20Project/Code/spotify_playlist_api/settings.py) files.
 
 ```python
 @shared_task
@@ -356,7 +356,7 @@ def test_account_still_active()
 ```
 
 ### Unit Tests
-Several unit tests were developed using Django's unit testing utilities. These can be viewed in full in the job/tests.py file.
+Several unit tests were developed using Django's unit testing utilities. These can be viewed in full in the [job/tests.py](/Final%20Project/Code/job/tests.py) file.
 
 ```python
 class TestSongGet(TestCase)
