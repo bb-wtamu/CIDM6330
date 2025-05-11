@@ -137,3 +137,188 @@ Activity Diagram: Generating a New Playlist
 ### Entity Relationship Diagram
 
 ![ERD for the Spotify Playlist Generator](/Final%20Project/ERD-light.png "ERD for the Spotify Playlist Generator")
+
+## The API
+The API created for this project is written using Django Ninja.
+
+### The Models
+Models were created for all of the tables needed in my data schema, with the exception of the association tables between the User class and its libraries - these are generated automatically using Django's ManyToManyFields. The full code for this can be found within the /job/models.py file.
+
+```python
+class Song(models.Model):
+    songID = models.AutoField(primary_key=True)
+    artist = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)
+    album = models.CharField(max_length=200)
+    spotifyURI = models.CharField(max_length=200)
+    
+class Tag(models.Model):
+    tagID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=30)
+    isNumeric = models.booleanField()
+    
+class Tagged(models.Model):
+    taggedID = models.AutoField(primary_key=True)
+    song = models.ForeignKey(Song, models.CASCADE)
+    tag = models.ForeignKey(Tag, models.CASCADE)
+    value = models.CharField(max_length=70, null=True)
+    value_num = models.IntegerField(null=True)
+    
+class Ruleset(models.Model):
+    rulesetID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=30)
+    songCount = models.IntegerField(null=True)
+    
+class Rule(models.Model):
+    ARTIST = 1
+    TITLE = 2
+    ALBUM = 3
+    SHUFFLE = 4
+    SORT_STRATEGY_CHOICES = {
+        ARTIST: "Artist",
+        TITLE: "Title",
+        ALBUM: "Album",
+        SHUFFLE: "Shuffle",
+    }
+    
+    CONTAINS = 1
+    NOT_CONTAINS = 2
+    GREATER = 3
+    LESS = 4
+    EQUALS = 5
+    REQUIREMENT_CHOICES = {
+        CONTAINS = "Contains",
+        NOT_CONTAINS = "Does Not Contain",
+        GREATER = "Greater Than",
+        LESS = "Less Than",
+        EQUALS = "Equal To",
+    }
+    
+    ruleID = models.AutoField(primary_key=True)
+    tag = models.ForeignKey(Tag, models.CASCADE)
+    ruleset = models.ForeignKey(Ruleset, models.CASCADE)
+    requirement = models.IntegerField(choices=REQUIREMENT_CHOICES)
+    sort_strategy = models.IntegerField(choices=SORT_STRATEGY_CHOICES)
+    threshold = models.IntegerField(null=True)
+    value = models.CharField(max_length=70, null=True)
+    count = models.IntegerField()
+    percent = models.DecimalField(max_digits=4, decimal_places=2)
+
+class Playlist(models.Model):
+    playlistID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    spotifyID = models.CharField(max_length=200)
+    generatedBy = models.ForeignKey(Ruleset, models.SET_NULL, null=True)
+    
+class PlaylistAssignment(models.Model):
+    playlistAssignmentID = models.AutoField(primary_key=True)
+    song = models.ForeignKey(Song, models.CASCADE)
+    playlist = models.ForeignKey(Playlist, models.CASCADE)
+    position = models.IntegerField()
+    
+class User(models.Model):
+    userID = models.AutoField(primary_key=True)
+    spotifyID = models.CharField(max_length=200)
+    songLibrary = models.ManyToManyField(Song)
+    playlistLibrary = models.ManyToManyField(Playlist)
+    tagLibrary = models.ManyToManyField(Tag)
+    rulesetLibrary = models.ManyToManyField(Ruleset)
+```
+
+## CRUD Operations
+Basic CRUD operators were created for every model used by the system. These can be found in full in the /spotify_playlist_api/api.py file. Presented here is a single example.
+
+```python
+class SongIn(Schema):
+    artist: str
+    title: str
+    album: str
+    spotifyURI: str
+    tags: str
+
+class SongOut(Schema):
+    songID: int
+    artist: str
+    title: str
+    album: str
+    spotifyURI: str
+    tags: str
+
+@api.post("/song")
+def create_song(request, song: SongIn):
+    newSong = Song.objects.create(**song.dict())
+    return newSong
+
+@api.get("/song/{song_id}", response=SongOut)
+def get_song(request, song_id: int):
+    song = get_object_or_404(Song, songID=song_id)
+    return song
+
+@api.get("/song", response=list[SongOut])
+def list_songs(request):
+    songs = Song.objects.all()
+    return songs
+
+@api.put("/song/{song_id}")
+def update_song(request, song_id: int, payload: SongIn):
+    song = get_object_or_404(Song, songID=song_id)
+    for attr, value in payload.dict().items():
+        setattr(song, attr, value)
+    song.save()
+    return {"success": True, "song": song}
+
+@api.delete("/song/{song_id}")
+def delete_song(request, song_id: int):
+    song = get_object_or_404(Song, songID=song_id)
+    song.delete()
+    return {"success": True, "song": song}
+```
+
+## Beyond CRUD
+Some more complicated functions were added to the API, to enable functionality that will be necessary in the completed tool. These can also be found in the /spotify_playlist_api/api.py file.
+
+```python
+@api.post("/addToPlaylist")
+def add_to_playlist(request, playlist: int, songs: List[int]):
+    for index, song in enumerate(songs):
+        PlaylistAssignment.objects.create(song_id = song, playlist_id = playlist, position=index)
+    return get_object_or_404(Playlist, playlistID=playlist)
+    
+@api.post("/tagSongs")
+def tag_songs(request, setTag_id: int, val: str, val_int: int, songs: List[int]):
+    tag = get_object_or_404(Tag, tagID=setTag_id)
+    for song in songs:
+        if tag.isNumeric:
+            Tagged.objects.create(song_id=song, tag_id=setTag_id, value_num=val_int)
+        else:
+            Tagged.objects.create(song_id=song, tag_id=setTag_id, value=val)
+    return tag
+    
+@api.put("/user/songs/{user_id}")
+def associate_songs_to_user(request, user_id: int, songs: List[int]):
+    user = get_object_or_404(User, userID=user_id)
+    for song in songs:
+        user.songLibrary.add(get_object_or_404(Song, songID=song))
+    return user
+    
+@api.put("/user/playlists/{user_id}")
+def associate_playlists_to_user(request, user_id: int, playlists: List[int]):
+    user = get_object_or_404(User, userID=user_id)
+    for playlist in playlists:
+        user.playlistLibrary.add(get_object_or_404(Playlist, playlistID=playlist))
+    return user
+    
+@api.put("/user/tags/{user_id}")
+def associate_tags_to_user(request, user_id: int, tags: List[int]):
+    user = get_object_or_404(User, userID=user_id)
+    for tag in tags:
+        user.tagLibrary.add(get_object_or_404(Tag, tagID=tag))
+    return user
+    
+@api.put("/user/rulesets/{user_id}")
+def associate_rulesets_to_user(request, user_id: int, rulesets: List[int]):
+    user = get_object_or_404(User, userID=user_id)
+    for ruleset in rulesets:
+        user.rulesetLibrary.add(get_object_or_404(Ruleset, rulesetID=ruleset))
+    return user
+```
