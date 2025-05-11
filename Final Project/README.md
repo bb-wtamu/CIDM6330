@@ -7,6 +7,17 @@ CIDM 6330
 My project is a playlist generation tool for [Spotify](https://open.spotify.com). While the service does a pretty incredible job of generating playlists of songs you like or that it thinks you will like, it has very few tools to assist in the on-the-fly generation of such for yourself, assuming you would like any control over that process. This was intended to be a tool that could step into that gap. I won't say I reached that goal - there is no actual integration for spotify in my app, and it doesn't actually do much of what it promises - but the beginnings of an API for accomplishing that goal are in place.
 
 ## Design Documentation
+### Ubiquitous Language Glossary
+The provided link for this topic didn't work, but googling suggests this is simply a glossary of common terminology to the system.
+
+* Associate: The process of identifying what objects belong to a particular user; they are "associated" to them.
+* Playlist: An ordered collection of songs.
+* Rule: A definition by which songs are selected to be added to a playlist. This is essentially a filter to apply to a complete list of songs to pull a small group of them out, possible via both eliminating some options and using various selection criteria to pick a certain number from those left. An example would be selecting 50 songs randomly from all of the 4 or 5 rated Rock songs in the library. This rule elminates all songs with genres other than rock and all songs with ratings below 4. From those left, it selects 50 via a random process.
+* Ruleset: A collection of rules by which all the songs for a particular playlist are selected. This can be made up of just one rule, or a collection of many rules each adding a selection of songs to the whole list.
+* SpotifyID/SpotifyURI: The URI used by spotify to identify a particular user's account, a particular song, or a particular playlist.
+* Spotify Token: The access token provided to us that allows us to manipulate a user's spotify account. It can be revoked or time out, at which point a new token will be required before the system can interact with spotify on a user's behalf.
+* Tag: the definition of a piece of extraneous information about a song. For example, "Genre" would be a tag, while something like "Rock" or "R&B" would be the value of that tag when assigned to a particular song. Or "Rating" would be a tag, with values between 1 and 5.
+
 ### User Stories
 | Story                                                                     | Priority |
 | ------------------------------------------------------------------------- | -------- |
